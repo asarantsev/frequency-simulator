@@ -1,2 +1,12 @@
 # frequency-simulator
-Updated version with frequencies: monthly, quarterly, annually
+Updated version with contributions or withdrawals with various frequencies: monthly, quarterly, annually. Previously, we allowed only annual contributions or withdrawals. 
+
+During each year, the amunt of contributions or withdrawals does not change. We still simulate annual returns of the portfolio. We do NOT simulate more frequent returns, because for this we will need to do all regressions again, from scratch. Our previous work, which was done before the annual version of this simulator was started, only showed that residuals/innovations often do not form white noise. 
+
+But we simulate annual changes in wealth resulting from more frequent contributions using a simulated one-year return. We do this for each of the Monte Carlo simulations, and each of these years. For this, we need to make a model of monthly or quarterly returns, so that the combined total returns in these 12 months or 4 quarters is equal to the given simulated return. 
+
+We could choose stochastic models with constant or stochastic volatility, in the spirit of our work with VIX and stock returns. But we got difficulties in these modeling of domestic stocks, international stocks, and bonds. They behave differently, and have different volatilities. Thus we ended up using the most primitive deterministic model: Returns of our portfolio in each of these 12 months or 4 quarters (in the arithmetic sense) are the same, and deterministic given already simulated annual returns. 
+
+Under this simplified assumption, we could express the change in wealth by a simple formula, using geometric progression (sequence), which is encoded in flask_app.py in 'freqSwitch' function. We simulated various scenarios and looked at the tracking error: Difference between wealth change from such simple model and from a more sophisticated stochastic model, with returns iid normal. Of course, we conditioned that the sum of monthly/quarterly geometric returns must be equal to the geometric version of annual returns, already simulated from the main time series model. This error was not that large, compared to the overall scales of the simulation. 
+
+Of course, this model is very primitive, and much further research is needed. Still, in a private conversation one financial adviser expressed the need to allow for monthly contrbutions. This is commonly done in practice. Also, it is natural to withdraw money monthly, simulating the monthly salary. Thus I needed to allow this option, even when we do not have a good model. In the future, I very much hope to improve upon this! 
